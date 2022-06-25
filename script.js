@@ -4,12 +4,22 @@ let userName = {
 
 let keepLoggedIn = (answer) => axios.post("https://mock-api.driven.com.br/api/v6/uol/status", userName);
 
+function searchMessages () {
+    const promise = axios.get("https://mock-api.driven.com.br/api/v6/uol/messages");
+    promise.then(printMessages); 
+}
+
+let startChat = () => {
+    keepLoggedIn();
+    searchMessages();
+}
+
 function signIn () {
     userName.name = prompt("Qual o seu lindo nome?");
     
-    let promise = axios.post("https://mock-api.driven.com.br/api/v6/uol/participants", userName);
+    const promise = axios.post("https://mock-api.driven.com.br/api/v6/uol/participants", userName);
 
-    promise.then(keepLoggedIn);
+    promise.then(startChat);
     promise.catch(handleError);
 }
 
@@ -24,11 +34,6 @@ function handleError (error) {
 
 setInterval(keepLoggedIn, 5000);
 
-function searchMessages () {
-    const promise = axios.get("https://mock-api.driven.com.br/api/v6/uol/messages");
-    promise.then(printMessages); 
-}
-
 function printMessages (answer) {
     let msg = [];
     msg = answer.data;
@@ -40,14 +45,14 @@ function printMessages (answer) {
     for(i = 0 ; i < msg.length ; i++) {
         if(msg[i].type === "status"){
             content.innerHTML += `
-                <div class="${msg[i].type} msg">
+                <div class="${msg[i].type}">
                     <span class="time">(${msg[i].time})</span>
                     <span class="text"><strong>${msg[i].from}</strong> ${msg[i].text}
                 </div>
                 `;
         }
         
-        if(msg[i].type === "message msg"){
+        if(msg[i].type === "message"){
             content.innerHTML += `
                 <div class="${msg[i].type}">
                     <span class="time">(${msg[i].time})</span>
@@ -56,7 +61,7 @@ function printMessages (answer) {
                 `;
         }
 
-        if(msg[i].type === "private_message msg"){
+        if(msg[i].type === "private_message" && msg[i].to === userName.name){
             content.innerHTML += `
                 <div class="${msg[i].type}">
                     <span class="time">(${msg[i].time})</span>
@@ -72,3 +77,24 @@ function printMessages (answer) {
 }
 
 setInterval(searchMessages, 3000);
+
+let onSend = () => {
+    searchMessages();
+
+    document.querySelector(".type-here").value = "";
+}
+
+function sendMessage () {
+    const text = document.querySelector(".type-here").value;
+    const msg = {
+        from: userName.name,
+        to: "Todos",
+        text: text,
+        type: "message"
+    }
+
+    const promise = axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", msg);
+
+    promise.then(onSend);
+    promise.catch(window.location.reload);
+}

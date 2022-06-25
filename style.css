@@ -59,11 +59,14 @@
     .send input {
         font-size: 18px;
         font-weight: 400;
-        font-style: italic;
         font-family: 'Roboto', sans-serif;
         margin-left: 17px;
         border: none;
         outline: 0;
+    }
+
+    .send input::placeholder {
+        font-style: italic;
     }
 
     .msg-box {
