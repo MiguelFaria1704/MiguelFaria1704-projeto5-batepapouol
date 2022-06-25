@@ -98,3 +98,11 @@ function sendMessage () {
     promise.then(onSend);
     promise.catch(window.location.reload);
 }
+
+    document.addEventListener("keypress", function(e) {
+        if(e.key === "Enter") {
+            const button = document.querySelector(".btn");
+            button.click();
+            console.log("Enviar");
+        }
+    });
