@@ -16,7 +16,7 @@
     <div class="chat hidden">
         <div class="top">
             <img src="/img/logo.jpg" alt="Bate papo UOL" onclick="window.location.reload()">
-            <ion-icon name="people"></ion-icon>
+            <ion-icon name="people" onclick="showParticipants()"></ion-icon>
         </div>
 
         <div class="msg-box"></div>
@@ -29,9 +29,11 @@
     
     <div class="start-screen">
         <img src="/img/logo.jpg" alt="Bate papo UOL">
-        <input type="text" class="user-name" placeholder="Digite seu nome" />
-        <br />
-        <input type="submit" class="enter" value="Entrar" onclick="signIn()" />
+        <div>  
+            <input type="text" class="user-name" placeholder="Digite seu nome" />
+            <br />
+            <input type="submit" class="enter" value="Entrar" onclick="signIn()" />
+        </div>     
     </div>
     
     <div class="desktop-error">

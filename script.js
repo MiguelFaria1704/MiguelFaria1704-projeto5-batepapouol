@@ -26,6 +26,11 @@ let startChat = () => {
 
 function signIn () {
     userName.name = document.querySelector(".user-name").value;
+
+    document.querySelector(".start-screen > div").innerHTML = `
+        <img src="./img/Loadin_icon.gif" alt="Loading">
+        <h3>Entrando...</h3>
+    `;
     
     const promise = axios.post("https://mock-api.driven.com.br/api/v6/uol/participants", userName);
 
@@ -50,7 +55,7 @@ function printMessages (answer) {
     
     content.innerHTML = "";
 
-    for(i = 0 ; i < msg.length ; i++) {
+    for(let i = 0 ; i < msg.length ; i++) {
         if(msg[i].type === "status"){
             content.innerHTML += `
                 <div class="${msg[i].type}">
@@ -120,3 +125,58 @@ document.addEventListener("keypress", function(e) {
         button.click();
     }
  });
+
+ function printParticipants (answer){
+    let users = [];
+    users = answer.data;
+
+    let list = document.querySelector(".participants-list");
+    
+    for(let i = 0 ; i < users.length ; i ++) {
+        list.innerHTML += `
+            <div>
+                <ion-icon name="person-circle"></ion-icon>
+                <p>${users[i].name}</p>
+            </div>
+        `;
+    }
+ }
+
+ function showParticipants () {
+    document.body.innerHTML += `
+        <div class="cover"></div>
+     `;
+    
+    document.body.innerHTML += `
+        <div class="participants-bar">
+            <h5>Escolha um contato para enviar mensagem:</h5>
+
+            <div class="participants-list">
+                <div>
+                    <ion-icon name="people"></ion-icon>
+                    <p>Todos</p>
+                </div>
+            </div>
+
+            <h5>Escolha a visibilidade:</h5>
+
+            <div class="visibility-options">
+                <div>
+                    <ion-icon name="lock-open"></ion-icon>
+                    <p>Público</p>
+                </div>
+                <div>
+                    <ion-icon name="lock-closed"></ion-icon>
+                    <p>Reservadamente</p>
+                </div>
+            </div>
+        </div>
+     `;
+
+     const promise = axios.get("https://mock-api.driven.com.br/api/v6/uol/participants");
+     promise.then(printParticipants);
+}
+   
+
+     
+ 
