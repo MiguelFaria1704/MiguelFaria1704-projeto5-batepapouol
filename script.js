@@ -2,20 +2,30 @@ let userName = {
     name: ""
 }
 
-let keepLoggedIn = (answer) => axios.post("https://mock-api.driven.com.br/api/v6/uol/status", userName);
+
+let keepLoggedIn = (answer) => {
+    if(document.querySelector(".start-screen").classList.contains("hidden")) {
+        axios.post("https://mock-api.driven.com.br/api/v6/uol/status", userName);
+    }
+}
 
 function searchMessages () {
-    const promise = axios.get("https://mock-api.driven.com.br/api/v6/uol/messages");
-    promise.then(printMessages); 
+    if(document.querySelector(".start-screen").classList.contains("hidden")) {
+        const promise = axios.get("https://mock-api.driven.com.br/api/v6/uol/messages");
+        promise.then(printMessages); 
+    }
 }
 
 let startChat = () => {
+    document.querySelector(".start-screen").classList.add("hidden");
+    document.querySelector(".chat").classList.remove("hidden");
+    
     keepLoggedIn();
     searchMessages();
 }
 
 function signIn () {
-    userName.name = prompt("Qual o seu lindo nome?");
+    userName.name = document.querySelector(".user-name").value;
     
     const promise = axios.post("https://mock-api.driven.com.br/api/v6/uol/participants", userName);
 
@@ -23,14 +33,12 @@ function signIn () {
     promise.catch(handleError);
 }
 
-signIn();
+
 
 function handleError (error) {
     alert("Este nome ja existe! Escolha outro.");
-    signIn ();
+    window.location.reload();
 }
-
-
 
 setInterval(keepLoggedIn, 5000);
 
@@ -99,10 +107,16 @@ function sendMessage () {
     promise.catch(window.location.reload);
 }
 
-    document.addEventListener("keypress", function(e) {
-        if(e.key === "Enter") {
-            const button = document.querySelector(".btn");
-            button.click();
-            console.log("Enviar");
+document.addEventListener("keypress", function(e) {
+    if(e.key === "Enter") {
+        let button;
+        if(document.querySelector(".start-screen").classList.contains("hidden")) {
+            button = document.querySelector(".btn");
         }
-    });
+
+        if(document.querySelector(".chat").classList.contains("hidden")) {
+            button = document.querySelector(".enter");
+        }
+        button.click();
+    }
+ });

@@ -13,16 +13,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="top">
-        <img src="/img/logo.jpg" alt="Bate papo UOL">
-        <ion-icon name="people"></ion-icon>
+    <div class="chat hidden">
+        <div class="top">
+            <img src="/img/logo.jpg" alt="Bate papo UOL" onclick="window.location.reload()">
+            <ion-icon name="people"></ion-icon>
+        </div>
+
+        <div class="msg-box"></div>
+
+        <div class="send">
+            <input type="text" class="type-here" placeholder="Escreva aqui..." />
+            <ion-icon name="paper-plane-outline" class="btn" onclick="sendMessage()"></ion-icon>
+        </div>
     </div>
-
-    <div class="msg-box"></div>
-
-    <div class="send">
-        <input type="text" class="type-here" placeholder="Escreva aqui..." />
-        <ion-icon name="paper-plane-outline" class="btn" onclick="sendMessage()"></ion-icon>
+    
+    <div class="start-screen">
+        <img src="/img/logo.jpg" alt="Bate papo UOL">
+        <input type="text" class="user-name" placeholder="Digite seu nome" />
+        <br />
+        <input type="submit" class="enter" value="Entrar" onclick="signIn()" />
     </div>
     
     <div class="desktop-error">

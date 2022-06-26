@@ -11,6 +11,10 @@
         font-weight: 700;
     }
 
+    .hidden {
+        display: none !important;
+    }
+
     .top {
         width: 100%;
         height: 80px;
@@ -29,11 +33,13 @@
         width: 75px;
         height: 53px;
         margin-left: 22px;
+        cursor: pointer;
     }
 
     .top ion-icon {
         font-size: 45px;
         margin-right: 21px;
+        cursor: pointer;
     }
 
     .send {
@@ -115,6 +121,50 @@
 
     .desktop-error {
         display: none;
+    }
+
+    .start-screen {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #FFFFFF;
+    }
+
+    .start-screen img {
+        width: 130px;
+        margin-top: 10.8vh;
+    }
+
+    .user-name {
+        width: 260px;
+        height: 54px;
+        margin-top: 94px;
+        text-align: center;
+        font-size: 'Roboto', sans-serif;
+        font-weight: 400;
+        font-size: 18px;
+        color: #AEAEAE;
+        border: 1px solid #D7D7D7;
+        border-radius: 4px;
+    }
+
+    .enter {
+        width: 109px;
+        height: 45px; 
+        font-size: 'Roboto', sans-serif;
+        font-weight: 400;
+        font-size: 18px;
+        color: #696969;
+        background-color: #E7E7E7;
+        border-radius: 9px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .user-name::placeholder {
+        color: #AEAEAE;
     }
 }
 
