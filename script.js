@@ -2,6 +2,8 @@ let userName = {
     name: ""
 }
 
+let to = "Todos";
+let type = "message";
 
 let keepLoggedIn = (answer) => {
     if(document.querySelector(".start-screen").classList.contains("hidden")) {
@@ -74,7 +76,7 @@ function printMessages (answer) {
                 `;
         }
 
-        if(msg[i].type === "private_message" && msg[i].to === userName.name){
+        if(msg[i].type === "private_message" && (msg[i].to === userName.name || msg[i].from === userName.name)){
             content.innerHTML += `
                 <div class="${msg[i].type}">
                     <span class="time">(${msg[i].time})</span>
@@ -101,10 +103,10 @@ function sendMessage () {
     const text = document.querySelector(".type-here").value;
     const msg = {
         from: userName.name,
-        to: "Todos",
+        to: to,
         text: text,
-        type: "message"
-    }
+        type: type
+    };
 
     const promise = axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", msg);
 
@@ -132,19 +134,31 @@ document.addEventListener("keypress", function(e) {
 
     let list = document.querySelector(".participants-list");
     
+    list.innerHTML = "";
+
     for(let i = 0 ; i < users.length ; i ++) {
-        list.innerHTML += `
-            <div>
-                <ion-icon name="person-circle"></ion-icon>
-                <p>${users[i].name}</p>
-            </div>
-        `;
+        if(users[i].name === to) {
+            list.innerHTML += `
+                <div>
+                    <ion-icon name="person-circle"></ion-icon>
+                    <p onclick="setTo(this)">${users[i].name}</p>
+                    <ion-icon class="checked" name="checkmark-sharp"></ion-icon>
+                </div>
+            `;
+        }   else {
+                list.innerHTML += `
+                    <div>
+                        <ion-icon name="person-circle"></ion-icon>
+                        <p onclick="setTo(this)">${users[i].name}</p>
+                    </div>
+                `;
+            }
     }
  }
 
  function showParticipants () {
     document.body.innerHTML += `
-        <div class="cover"></div>
+        <div class="cover" onclick="closeSidebar()"></div>
      `;
     
     document.body.innerHTML += `
@@ -163,20 +177,98 @@ document.addEventListener("keypress", function(e) {
             <div class="visibility-options">
                 <div>
                     <ion-icon name="lock-open"></ion-icon>
-                    <p>Público</p>
+                    <p class="public" data-identifier="visibility" onclick="setType(this)">Público</p>
                 </div>
+
                 <div>
                     <ion-icon name="lock-closed"></ion-icon>
-                    <p>Reservadamente</p>
+                    <p class="private" data-identifier="visibility" onclick="setType(this)">Reservadamente</p>
                 </div>
             </div>
         </div>
      `;
 
-     const promise = axios.get("https://mock-api.driven.com.br/api/v6/uol/participants");
-     promise.then(printParticipants);
+    let node;
+    if(type === "message") {
+        node = document.querySelector(".public");
+     }
+
+     if(type === "private_message") {
+        node = document.querySelector(".private");
+     }
+
+     checkElement(node, "");
+     
+     checkParticipants();
+
+     let check = document.querySelectorAll(".selected")
+     for(let i = 0 ; i < check ; i ++) {
+        checkElement(check[i], "select");
+     }
+}
+
+let checkParticipants = () => {
+    if(document.querySelector(".participants-bar") != undefined) {
+        const promise = axios.get("https://mock-api.driven.com.br/api/v6/uol/participants");
+        promise.then(printParticipants);
+    }
 }
    
 
+let setTo = element => {
+    to = element.innerText;
+
+    checkElement(element, "to");
+
+    if(type === "private_message") {
+        document.querySelector(".send-info").innerHTML = `Enviando para ${to} (reservadamente)`;
+    }   else {
+            document.querySelector(".send-info").innerHTML = `Enviando para ${to}`;
+    } 
+}
+
+let setType = element => {
+    if(element.innerText === "Reservadamente") {
+        type = "private_message";
+    } else {
+        type = "message";
+    }
+
+    checkElement(element, "type");
+
+    if(type === "private_message") {
+        document.querySelector(".send-info").innerHTML = `Enviando para ${to} (reservadamente)`;
+    }   else {
+        document.querySelector(".send-info").innerHTML = `Enviando para ${to}`;
+    }
+}
+
+let closeSidebar = () => {
+    let node = document.querySelector(".cover");
+    node.parentNode.removeChild(node);
+    
+    node = document.querySelector(".participants-bar");
+    node.parentNode.removeChild(node);
+} 
+
+let checkElement = (element, sort) => {
+    if(sort === "type") {
+        const node = document.querySelector(".visibility-options .checked");
+        if(node != undefined) {
+            node.parentNode.removeChild(node);
+        }
+    }
+
+    if(sort === "to") {
+        const node = document.querySelector(".participants-list .checked");
+        if(node != undefined) {
+            node.parentNode.removeChild(node);
+        }   
+    }
+
+    element.parentNode.innerHTML += `
+        <ion-icon class="checked" name="checkmark-sharp"></ion-icon>
+    `;
+}
      
  
