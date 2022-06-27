@@ -134,7 +134,7 @@ document.addEventListener("keypress", function(e) {
 
     let list = document.querySelector(".participants-list");
     
-    list.innerHTML = "";
+    list.innerHTML += "";
 
     for(let i = 0 ; i < users.length ; i ++) {
         if(users[i].name === to) {
@@ -168,7 +168,7 @@ document.addEventListener("keypress", function(e) {
             <div class="participants-list">
                 <div>
                     <ion-icon name="people"></ion-icon>
-                    <p>Todos</p>
+                    <p class="all" onclick="setTo(this)">Todos</p>
                 </div>
             </div>
 
@@ -188,23 +188,24 @@ document.addEventListener("keypress", function(e) {
         </div>
      `;
 
-    let node;
+    let visibility;
     if(type === "message") {
-        node = document.querySelector(".public");
+        visibility = document.querySelector(".public");
      }
 
      if(type === "private_message") {
-        node = document.querySelector(".private");
+        visibility = document.querySelector(".private");
      }
 
-     checkElement(node, "");
+     checkElement(visibility, "");
+
+     if(to === "Todos") {
+         let all = document.querySelector(".all");
+         checkElement(all, "to");
+     }
      
      checkParticipants();
 
-     let check = document.querySelectorAll(".selected")
-     for(let i = 0 ; i < check ; i ++) {
-        checkElement(check[i], "select");
-     }
 }
 
 let checkParticipants = () => {
